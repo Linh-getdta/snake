@@ -37,8 +37,8 @@ def creat_result_table():
         
         )"""
     )
-    conn.commit
-    conn.close
+    conn.commit()
+    conn.close()
     
 def check_table_player():
     conn = get_connetion()
@@ -48,7 +48,7 @@ def check_table_player():
     for colum in columns:
         print(colum)
         
-    conn.close
+    conn.close()
     
 def check_table_result():
     conn = get_connetion()
@@ -108,7 +108,7 @@ def get_results():
     results = cursor.fetchall()
     for result in results:
         print(result)
-    conn.close
+    conn.close()
 def delete_player(player_id):
 
     conn = get_connetion()
@@ -156,11 +156,9 @@ if __name__ == "__main__":
     
     creat_player_table()
     creat_result_table()
-    get_results()
-    
-
-   
-    
-
-
+    add_players("tiền")
+    #add_result( 1, 150, "2026-10-03 19:30:00")
+    leaderboard = get_leaderboard()
+    for player in leaderboard:
+        print(player)
 

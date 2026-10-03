@@ -1,7 +1,9 @@
 import pygame
 from game import Snake_Game
+from database import creat_player_table
 
 pygame.init()
+creat_player_table()
 
 WIDTH = 800
 HEIGHT = 600
@@ -141,7 +143,7 @@ while entering_name:
 # BẮT ĐẦU GAME
 # =========================
 
-game = SnakeGame(
+game = Snake_Game(
     screen,
     player_name
 )
