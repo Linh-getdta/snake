@@ -93,6 +93,39 @@ def add_result(player_id, diem, played_at):
     conn.commit()
     conn.close()
 
+def save_game(player_name, score):
+    from datetime import datetime
+
+    conn = get_connetion()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT PLAYER_ID
+        FROM NGUOI_CHOI
+        WHERE NAME_PLAYER = ?
+    """, (player_name,))
+
+    player = cursor.fetchone()
+
+    if player is None:
+        cursor.execute("""
+            INSERT INTO NGUOI_CHOI(NAME_PLAYER)
+            VALUES (?)
+        """, (player_name,))
+
+        player_id = cursor.lastrowid
+    else:
+        player_id = player[0]
+
+    played_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    cursor.execute("""
+        INSERT INTO KET_QUA(PLAYER_ID, DIEM, PLAYED_AT)
+        VALUES (?, ?, ?)
+    """, (player_id, score, played_at))
+
+    conn.commit()
+    conn.close()
 def get_results():
     conn = get_connetion()
     cursor = conn.cursor()
