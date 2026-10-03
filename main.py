@@ -1,9 +1,11 @@
 import pygame
 from game import Snake_Game
-from database import creat_player_table
+from database import creat_player_table, creat_result_table, save_game
 
 pygame.init()
 creat_player_table()
+creat_result_table()
+
 
 WIDTH = 800
 HEIGHT = 600
@@ -59,7 +61,7 @@ while entering_name:
     screen.fill(BLACK)
 
     title = title_font.render(
-        "SNAKE GAME",
+        "SNAKE_GAME",
         True,
         GREEN
     )
@@ -149,6 +151,7 @@ game = Snake_Game(
 )
 
 score = game.run()
+save_game(player_name, score)
 
 
 # =========================

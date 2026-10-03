@@ -1,97 +1,200 @@
 import pygame
 import random
 
+
 class Snake_Game:
-    pygame.init()
 
-WIDTH = 800
-HEIGHT = 600
-CELL_SIZE = 20
+    def __init__(self, screen, player_name):
+        self.screen = screen
+        self.player_name = player_name
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Snake Game")
-clock = pygame.time.Clock()
+        self.WIDTH = 800
+        self.HEIGHT = 600
+        self.CELL_SIZE = 20
 
-black = (0, 0, 0)
-white = (255, 255, 255)
-green = (0, 255, 0)
-red = (255, 0, 0)
+        self.black = (0, 0, 0)
+        self.white = (255, 255, 255)
+        self.green = (0, 255, 0)
+        self.red = (255, 0, 0)
 
-snake = [
-    [200, 200],
-    [180, 200],
-    [160, 200]
-]
+        self.clock = pygame.time.Clock()
+        self.font = pygame.font.SysFont("comicsansms", 35)
 
+        self.snake = [
+            [200, 200],
+            [180, 200],
+            [160, 200]
+        ]
 
-direction = "RIGHT"
+        self.direction = "RIGHT"
 
-x_food = random.randrange(1, (WIDTH // CELL_SIZE)) * CELL_SIZE
-y_food = random.randrange(1, (HEIGHT // CELL_SIZE)) * CELL_SIZE
+        self.x_food = random.randrange(
+            0,
+            self.WIDTH,
+            self.CELL_SIZE
+        )
 
-score = 0
+        self.y_food = random.randrange(
+            0,
+            self.HEIGHT,
+            self.CELL_SIZE
+        )
 
-font = pygame.font.SysFont("comicsansms", 35)
+        self.score = 0
+        self.running = True
 
-running = True
-while running:
-    for event in pygame.event.get():
+    def handle_event(self, event):
+
         if event.type == pygame.QUIT:
-            running = False
+            self.running = False
+
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP and direction != "DOWN":
-                direction = "UP"
-            if event.key == pygame.K_DOWN and direction != "UP":
-                direction = "DOWN"
-            if event.key == pygame.K_LEFT and direction != "RIGHT":
-                direction = "LEFT"
-            if event.key == pygame.K_RIGHT and direction != "LEFT":
-                direction = "RIGHT"
 
-    head_x = snake[0][0]
-    head_y = snake[0][1]
+            if event.key == pygame.K_UP:
+                if self.direction != "DOWN":
+                    self.direction = "UP"
 
-    if direction == "UP":
-        head_y -= CELL_SIZE
-    elif direction == "DOWN":
-        head_y += CELL_SIZE
-    elif direction == "LEFT":
-        head_x -= CELL_SIZE
-    elif direction == "RIGHT":
-        head_x += CELL_SIZE
+            elif event.key == pygame.K_DOWN:
+                if self.direction != "UP":
+                    self.direction = "DOWN"
 
-    new_head = [head_x, head_y] 
+            elif event.key == pygame.K_LEFT:
+                if self.direction != "RIGHT":
+                    self.direction = "LEFT"
 
-    snake.insert(0, new_head)
+            elif event.key == pygame.K_RIGHT:
+                if self.direction != "LEFT":
+                    self.direction = "RIGHT"
 
+    def move(self):
 
-    if head_x == x_food and head_y == y_food:
-        score += 10
+        head_x = self.snake[0][0]
+        head_y = self.snake[0][1]
 
-        x_food = random.randrange(0, WIDTH, CELL_SIZE)
-        y_food = random.randrange(0, HEIGHT, CELL_SIZE)
+        if self.direction == "UP":
+            head_y -= self.CELL_SIZE
 
-    else:
-        snake.pop()
+        elif self.direction == "DOWN":
+            head_y += self.CELL_SIZE
 
-    if new_head in snake[1:]:
-        running = False
+        elif self.direction == "LEFT":
+            head_x -= self.CELL_SIZE
 
-    screen.fill(black)
+        elif self.direction == "RIGHT":
+            head_x += self.CELL_SIZE
 
-    pygame.draw.rect(screen, red,(x_food, y_food, CELL_SIZE, CELL_SIZE))
+        new_head = [head_x, head_y]
 
-    for part in snake:
-        pygame.draw.rect(screen, green,(part[0], part[1], CELL_SIZE, CELL_SIZE))
+        self.snake.insert(0, new_head)
 
-    score_text = font.render(
-        f"score: {score}", True, white
-    )
-    screen.blit(score_text,(10, 10))
-    pygame.display.update()
-    clock.tick(10)
+        if head_x == self.x_food and head_y == self.y_food:
 
+            self.score += 10
 
+            self.x_food = random.randrange(
+                0,
+                self.WIDTH,
+                self.CELL_SIZE
+            )
 
+            self.y_food = random.randrange(
+                0,
+                self.HEIGHT,
+                self.CELL_SIZE
+            )
 
-pygame.quit()
+        else:
+            self.snake.pop()
+
+    def check_collision(self):
+
+        head_x = self.snake[0][0]
+        head_y = self.snake[0][1]
+
+        if head_x < 0:
+            return True
+
+        if head_x >= self.WIDTH:
+            return True
+
+        if head_y < 0:
+            return True
+
+        if head_y >= self.HEIGHT:
+            return True
+
+        if self.snake[0] in self.snake[1:]:
+            return True
+
+        return False
+
+    def draw(self):
+
+        self.screen.fill(self.black)
+
+        pygame.draw.rect(
+            self.screen,
+            self.red,
+            (
+                self.x_food,
+                self.y_food,
+                self.CELL_SIZE,
+                self.CELL_SIZE
+            )
+        )
+
+        for part in self.snake:
+
+            pygame.draw.rect(
+                self.screen,
+                self.green,
+                (
+                    part[0],
+                    part[1],
+                    self.CELL_SIZE,
+                    self.CELL_SIZE
+                )
+            )
+
+        player_text = self.font.render(
+            f"Player: {self.player_name}",
+            True,
+            self.white
+        )
+
+        self.screen.blit(
+            player_text,
+            (10, 10)
+        )
+
+        score_text = self.font.render(
+            f"Score: {self.score}",
+            True,
+            self.white
+        )
+
+        self.screen.blit(
+            score_text,
+            (10, 45)
+        )
+
+        pygame.display.update()
+
+    def run(self):
+
+        while self.running:
+
+            for event in pygame.event.get():
+                self.handle_event(event)
+
+            self.move()
+
+            if self.check_collision():
+                self.running = False
+                break
+
+            self.draw()
+
+            self.clock.tick(10)
+
+        return self.score
