@@ -1,5 +1,6 @@
 import pygame
 from game import Snake_Game
+from database import DATABASE_NAME
 
 pygame.init()
 

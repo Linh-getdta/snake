@@ -1,6 +1,6 @@
 import sqlite3
 
-DATABASE_NAME = "snake.db" 
+DATABASE_NAME = "database/snake.db" 
 
 def get_connetion(): # kết nối đến database
     
