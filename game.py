@@ -28,20 +28,26 @@ class Snake_Game:
 
         self.direction = "RIGHT"
 
-        self.x_food = random.randrange(
-            0,
-            self.WIDTH,
-            self.CELL_SIZE
-        )
-
-        self.y_food = random.randrange(
-            0,
-            self.HEIGHT,
-            self.CELL_SIZE
-        )
-
         self.score = 0
         self.running = True
+        self.x_food = 0
+        self.y_food = 0
+        self._place_food()
+
+    def _place_food(self):
+        occupied = {tuple(part) for part in self.snake}
+        available = [
+            (x, y)
+            for x in range(0, self.WIDTH, self.CELL_SIZE)
+            for y in range(0, self.HEIGHT, self.CELL_SIZE)
+            if (x, y) not in occupied
+        ]
+
+        if not available:
+            return False
+
+        self.x_food, self.y_food = random.choice(available)
+        return True
 
     def handle_event(self, event):
 
@@ -90,18 +96,8 @@ class Snake_Game:
         if head_x == self.x_food and head_y == self.y_food:
 
             self.score += 10
-
-            self.x_food = random.randrange(
-                0,
-                self.WIDTH,
-                self.CELL_SIZE
-            )
-
-            self.y_food = random.randrange(
-                0,
-                self.HEIGHT,
-                self.CELL_SIZE
-            )
+            if not self._place_food():
+                self.running = False
 
         else:
             self.snake.pop()

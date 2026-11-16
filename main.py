@@ -12,6 +12,7 @@ pygame.init()
 creat_player_table()
 creat_result_table()
 
+
 WIDTH = 800
 HEIGHT = 600
 
@@ -51,6 +52,7 @@ while entering_name:
             if event.key == pygame.K_RETURN:
 
                 if player_name.strip():
+                    player_name = player_name.strip()
                     entering_name = False
 
             elif event.key == pygame.K_BACKSPACE:

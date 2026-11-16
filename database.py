@@ -1,6 +1,7 @@
 import sqlite3
+from pathlib import Path
 
-DATABASE_NAME = "database/snake.db" 
+DATABASE_NAME = Path(__file__).resolve().with_name("snake.db")
 
 def get_connetion(): # kết nối đến database
     
@@ -48,7 +49,7 @@ def check_table_player():
     for colum in columns:
         print(colum)
         
-    conn.close
+    conn.close()
     
 def check_table_result():
     conn = get_connetion()
@@ -141,7 +142,7 @@ def get_results():
     results = cursor.fetchall()
     for result in results:
         print(result)
-    conn.close
+    conn.close()
 def delete_player(player_id):
 
     conn = get_connetion()
@@ -167,6 +168,7 @@ def get_play_count(player_id):
                 )  
     count = cursor.fetchone()[0]
     cursor.close()
+    conn.close()
     return count 
 
 def get_leaderboard(limit=10):
