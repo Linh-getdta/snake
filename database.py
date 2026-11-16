@@ -37,8 +37,8 @@ def creat_result_table():
         
         )"""
     )
-    conn.commit
-    conn.close
+    conn.commit()
+    conn.close()
     
 def check_table_player():
     conn = get_connetion()
@@ -169,7 +169,7 @@ def get_play_count(player_id):
     cursor.close()
     return count 
 
-def get_leaderboard():
+def get_leaderboard(limit=10):
     conn = get_connetion()
     cursor = conn.cursor()
     cursor.execute("""
@@ -178,10 +178,14 @@ def get_leaderboard():
                     FROM KET_QUA
                     JOIN NGUOI_CHOI
                     ON KET_QUA.PLAYER_ID = NGUOI_CHOI.PLAYER_ID
-                    ORDER BY KET_QUA.DIEM DESC""")
+                    ORDER BY KET_QUA.DIEM DESC,
+                        KET_QUA.PLAYED_AT ASC,
+                        KET_QUA.KETQUA_ID ASC
+                    LIMIT ?""", (limit,))
     
     leaderboard = cursor.fetchall()
     cursor.close()
+    conn.close()
     return leaderboard
 
 if __name__ == "__main__":
@@ -194,6 +198,5 @@ if __name__ == "__main__":
 
    
     
-
 
 

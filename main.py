@@ -1,6 +1,12 @@
 import pygame
 from game import Snake_Game
-from database import creat_player_table, creat_result_table, save_game
+from database import (
+    creat_player_table,
+    creat_result_table,
+    get_leaderboard,
+    save_game,
+)
+from leaderboard import draw_leaderboard
 
 pygame.init()
 creat_player_table()
@@ -152,43 +158,22 @@ game = Snake_Game(
 score = game.run()
 save_game(player_name, score)
 
-
-# =========================
-# GAME OVER
-# =========================
-
-screen.fill(BLACK)
-
-game_over = title_font.render(
-    "GAME OVER",
-    True,
-    (255, 0, 0)
+leaderboard = get_leaderboard()
+draw_leaderboard(
+    screen,
+    leaderboard,
+    player_name,
+    score,
+    title_font,
+    font,
 )
 
-screen.blit(
-    game_over,
-    (
-        WIDTH // 2 - game_over.get_width() // 2,
-        200
-    )
-)
-
-result = font.render(
-    f"{player_name} - Score: {score}",
-    True,
-    WHITE
-)
-
-screen.blit(
-    result,
-    (
-        WIDTH // 2 - result.get_width() // 2,
-        300
-    )
-)
-
-pygame.display.update()
-
-pygame.time.wait(3000)
+waiting_to_exit = True
+while waiting_to_exit:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            waiting_to_exit = False
+        elif event.type == pygame.KEYDOWN:
+            waiting_to_exit = False
 
 pygame.quit()
