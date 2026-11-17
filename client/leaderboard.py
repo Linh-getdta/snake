@@ -54,7 +54,7 @@ def draw_leaderboard(
                 ),
             )
 
-    hint = font.render("Nhan phim bat ky de thoat", True, GRAY)
+    hint = font.render("R / ENTER: Choi tiep   M: Menu   ESC / Q: Thoat", True, GRAY)
     screen.blit(
         hint,
         (screen.get_width() // 2 - hint.get_width() // 2, screen.get_height() - 55),

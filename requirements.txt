@@ -1,0 +1,4 @@
+pygame>=2.6,<3
+websocket-client>=1.8,<2
+fastapi>=0.110,<1
+uvicorn[standard]>=0.29,<1
